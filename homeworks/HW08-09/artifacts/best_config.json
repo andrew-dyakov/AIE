@@ -1,0 +1,26 @@
+{
+  "experiment_id": "E4",
+  "dataset": "CIFAR10",
+  "seed": 42,
+  "architecture": {
+    "input_dim": 3072,
+    "hidden_dims": [
+      256,
+      128
+    ],
+    "num_classes": 10,
+    "dropout_p": 0.3,
+    "use_batchnorm": false
+  },
+  "training": {
+    "optimizer": "Adam",
+    "lr": 0.001,
+    "batch_size": 256,
+    "early_stopping_patience": 5
+  },
+  "results": {
+    "best_val_accuracy": 0.55,
+    "best_val_loss": 1.2975629538297653,
+    "epochs_trained": 20
+  }
+}
