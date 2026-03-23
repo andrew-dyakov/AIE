@@ -1,0 +1,9 @@
+{
+  "dataset": "SVHN",
+  "architecture": "SimpleCNN",
+  "transforms": "basic",
+  "seed": 67,
+  "batch_size": 64,
+  "best_experiment": "C1",
+  "test_accuracy": 0.462
+}
