@@ -1,7 +1,7 @@
-experiment_id, task          , dataset      , seed, model_summary     , optimizer       , lr   , epochs_trained, best_val_accuracy, test_accuracy, precision, recall, mean_iou           , notes
-C1           , classification, SVHN         ,   67, SimpleCNN         , Adam            , 0.001,              3,             0.432,              ,          ,       ,                    , 
-C2           , classification, SVHN         ,   67, SimpleCNN         , Adam            , 0.001,              3,             0.206,              ,          ,       ,                    , 
-C3           , classification, SVHN         ,   67, ResNet18-head-only, Adam            , 0.001,              3,             0.302,              ,          ,       ,                    , frozen backbone
-C4           , classification, SVHN         ,   67, ResNet18-finetune , Adam            , 0.001,              3,             0.648,         0.642,          ,       ,                    , fine-tune layer4+fc (lr: 1e-4 backbone / 1e-3 head)
-V1           , segmentation  , OxfordIIITPet,   67, DeepLabV3_ResNet50, N/A (pretrained), N/A  ,              0,                  ,              ,          ,       , 0.46026819787871043, basic postprocess
-V2           , segmentation  , OxfordIIITPet,   67, DeepLabV3_ResNet50, N/A (pretrained), N/A  ,              0,                  ,              ,          ,       , 0.46026819787871043, alternative postprocess (small components removal)
+experiment_id, task          , dataset      , seed, model_summary     , optimizer       , lr    , epochs_trained, best_val_accuracy, test_accuracy, precision, recall, mean_iou           , notes
+C1           , classification, SVHN         ,   42, SimpleCNN         , Adam            , 0.001 ,              3,             0.404,              ,          ,       ,                    , 
+C2           , classification, SVHN         ,   42, SimpleCNN         , Adam            , 0.001 ,              3,             0.192,              ,          ,       ,                    , 
+C3           , classification, SVHN         ,   42, ResNet18-head-only, Adam            , 0.001 ,              3,             0.288,              ,          ,       ,                    , "frozen backbone, head-only training"
+C4           , classification, SVHN         ,   42, ResNet18-finetune , Adam            , 0.0001,              3,             0.66 ,         0.714,          ,       ,                    , partial fine-tuning: layer4+fc
+V1           , segmentation  , OxfordIIITPet,   42, DeepLabV3_ResNet50, N/A (pretrained),       ,              0,                  ,              ,          ,       , 0.46026819787871043, basic postprocess (inference only)
+V2           , segmentation  , OxfordIIITPet,   42, DeepLabV3_ResNet50, N/A (pretrained),       ,              0,                  ,              ,          ,       , 0.46026819787871043, alternative postprocess (inference only)
