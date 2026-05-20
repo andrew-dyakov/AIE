@@ -7,6 +7,6 @@
     "RandomForest": 0.9763,
     "LinearRegression": 0.9079
   },
-  "timestamp": "2026-05-17T21:38:40.536963",
+  "timestamp": "2026-05-20T23:17:43.834008",
   "note": "Model selected for deployment based on highest mean test R2"
 }

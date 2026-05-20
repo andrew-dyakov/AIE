@@ -1,19 +1,18 @@
 import os
+import yaml
 from pathlib import Path
 
-# Базовая директория проекта (папка, в которой лежит src/)
+# Абсолютный путь к корню проекта (где лежит pyproject.toml)
 BASE_DIR = Path(__file__).resolve().parents[1]
 
-# Пути к артефактам
-ARTIFACTS_DIR = BASE_DIR / "artifacts"
-MODELS_DIR = ARTIFACTS_DIR / "models"
-METRICS_DIR = ARTIFACTS_DIR / "metrics"
+CONFIGS_DIR = BASE_DIR / "configs"
+DATA_DIR = BASE_DIR / "data"
+ARTIFACTS_DIR = Path(os.getenv("ARTIFACTS_DIR", BASE_DIR / "artifacts")).resolve()
 
-MANIFEST_PATH = MODELS_DIR / "best_model_manifest.json"
 
-# Переопределение путей через ENV (для Docker/production)
-if os.getenv("ARTIFACTS_DIR"):
-    ARTIFACTS_DIR = Path(os.getenv("ARTIFACTS_DIR"))
-    MODELS_DIR = ARTIFACTS_DIR / "models"
-    METRICS_DIR = ARTIFACTS_DIR / "metrics"
-    MANIFEST_PATH = MODELS_DIR / "best_model_manifest.json"
+def load_yaml(filename: str) -> dict:
+    filepath = CONFIGS_DIR / filename
+    if not filepath.exists():
+        raise FileNotFoundError(f"Config file not found: {filepath}")
+    with open(filepath, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)

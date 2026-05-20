@@ -8,7 +8,7 @@
     "Stacking_Y1.pkl",
     "Stacking_Y2.pkl"
   ],
-  "timestamp": "2026-05-17T21:38:40.628580",
+  "timestamp": "2026-05-20T23:17:43.918314",
   "selection_criteria": "max_mean_R2_test",
   "preprocessor": "ColumnTransformer(StandardScaler + OneHotEncoder)",
   "features": {

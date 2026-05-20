@@ -1,20 +1,24 @@
-import logging
 import time
+import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from .config import ARTIFACTS_DIR
-from .model_loader import ModelRegistry
-from .predictor import CoolingPredictor
+# --- Импорт внутренних модулей (относительные импорты) ---
+from ..config import load_yaml, ARTIFACTS_DIR
+from ..utils.logging import setup_logger
+from ..models.registry import ModelRegistry
+from ..models.predictor import CoolingPredictor
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-logger = logging.getLogger(__name__)
+# --- Настройка логгера ---
+LOG_PATH = ARTIFACTS_DIR / "logs" / "service.log"
+LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+logger = setup_logger(str(LOG_PATH), name="service")
 
 
+# --- Pydantic схемы ---
 class PredictionRequest(BaseModel):
     X1: float = Field(..., description="Relative Compactness")
     X2: float = Field(..., description="Surface Area")
@@ -34,23 +38,31 @@ class PredictionResponse(BaseModel):
     top_factors: list[str]
 
 
+# --- Lifespan для загрузки моделей ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting model initialization...")
-    app.state.registry = ModelRegistry()
-    app.state.predictor = CoolingPredictor(app.state.registry)
-    logger.info("Model loaded successfully. Service ready.")
+    try:
+        app.state.registry = ModelRegistry()
+        app.state.predictor = CoolingPredictor(app.state.registry)
+        logger.info("Model loaded successfully. Service ready.")
+    except Exception as e:
+        logger.error(f"Failed to load model: {e}")
+        raise
     yield
     logger.info("Shutting down service...")
 
 
+# --- Создание приложения (ТОЛЬКО именованные аргументы!) ---
 app = FastAPI(
     title="Cooling Load Predictor API",
     version="0.1.0",
     lifespan=lifespan,
+    description="API for predicting heating and cooling loads in buildings",
 )
 
 
+# --- Эндпоинты ---
 @app.get("/health")
 def health_check():
     return {"status": "ok", "timestamp": time.time()}
@@ -62,10 +74,12 @@ def predict(request: PredictionRequest):
         start_time = time.time()
         result = app.state.predictor.predict(request.model_dump())
         latency = round(time.time() - start_time, 4)
-        logger.info("Prediction completed in %s seconds", latency)
+        logger.info(
+            f"Prediction completed in {latency}s | Y2={result['cooling_load']} | Risk={result['risk_level']}"
+        )
         return PredictionResponse(**result)
     except Exception as e:
-        logger.error("Prediction failed: %s", str(e))
+        logger.error(f"Prediction failed: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal prediction error")
 
 
@@ -73,6 +87,6 @@ def predict(request: PredictionRequest):
 def get_model_info():
     return {
         "model": app.state.registry.manifest["model_name"],
-        "features": app.state.registry.manifest.get("features", {}),
+        "targets": app.state.registry.manifest["targets"],
         "artifacts_dir": str(ARTIFACTS_DIR),
     }
