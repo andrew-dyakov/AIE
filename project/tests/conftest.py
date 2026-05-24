@@ -10,6 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 @pytest.fixture
 def sample_input():
+    """Типичный вход для предсказания."""
     return {
         "X1": 0.82,
         "X2": 612.5,
