@@ -2,7 +2,6 @@ import os
 import yaml
 from pathlib import Path
 
-# Абсолютный путь к корню проекта (где лежит pyproject.toml)
 BASE_DIR = Path(__file__).resolve().parents[1]
 
 CONFIGS_DIR = BASE_DIR / "configs"

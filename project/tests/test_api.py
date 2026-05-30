@@ -1,11 +1,10 @@
-"""Тесты для FastAPI сервиса."""
 from fastapi.testclient import TestClient
 from src.service.main import app
 
 
 def test_health():
     """Health check должен возвращать status=ok."""
-    with TestClient(app) as client:  # ← with запускает lifespan!
+    with TestClient(app) as client:
         response = client.get("/health")
         assert response.status_code == 200
         data = response.json()
@@ -24,8 +23,7 @@ def test_predict_success(sample_input):
     """Полные данные должны возвращать предсказание."""
     with TestClient(app) as client:
         response = client.post("/predict", json=sample_input)
-        
-        # Если артефакты есть — проверяем успешный ответ
+
         if response.status_code == 200:
             data = response.json()
             assert "heating_load" in data
@@ -36,7 +34,6 @@ def test_predict_success(sample_input):
             assert isinstance(data["heating_load"], float)
             assert data["risk_level"] in ["low", "medium", "high"]
         else:
-            # Если 500 — проверяем, что это ожидаемая ошибка отсутствия модели
             assert response.status_code == 500
             detail = response.json().get("detail", "").lower()
             assert "predictor" in detail or "registry" in detail or "model" in detail
@@ -46,12 +43,11 @@ def test_model_info():
     """Endpoint /info должен возвращать информацию о модели."""
     with TestClient(app) as client:
         response = client.get("/info")
-        
+
         if response.status_code == 200:
             data = response.json()
             assert "model" in data or "artifacts_dir" in data
         else:
-            # Ожидаемая ошибка, если модель не загружена
             assert response.status_code == 500
             detail = response.json().get("detail", "").lower()
             assert "registry" in detail

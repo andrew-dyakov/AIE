@@ -6,19 +6,16 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-# --- Импорт внутренних модулей (относительные импорты) ---
 from ..config import load_yaml, ARTIFACTS_DIR
 from ..utils.logging import setup_logger
 from ..models.registry import ModelRegistry
 from ..models.predictor import CoolingPredictor
 
-# --- Настройка логгера ---
 LOG_PATH = ARTIFACTS_DIR / "logs" / "service.log"
 LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
 logger = setup_logger(str(LOG_PATH), name="service")
 
 
-# --- Pydantic схемы ---
 class PredictionRequest(BaseModel):
     X1: float = Field(..., description="Relative Compactness")
     X2: float = Field(..., description="Surface Area")
@@ -38,7 +35,6 @@ class PredictionResponse(BaseModel):
     top_factors: list[str]
 
 
-# --- Lifespan для загрузки моделей ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting model initialization...")
@@ -53,7 +49,6 @@ async def lifespan(app: FastAPI):
     logger.info("Shutting down service...")
 
 
-# --- Создание приложения (ТОЛЬКО именованные аргументы!) ---
 app = FastAPI(
     title="Cooling Load Predictor API",
     version="0.1.0",
@@ -62,7 +57,6 @@ app = FastAPI(
 )
 
 
-# --- Эндпоинты ---
 @app.get("/health")
 def health_check():
     return {"status": "ok", "timestamp": time.time()}

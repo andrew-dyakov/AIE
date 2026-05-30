@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-Точка входа для запуска FastAPI-сервиса.
-
 Запуск:
     python -m src.service
     uv run python -m src.service
-    # Или напрямую через uvicorn:
+Или напрямую через uvicorn:
     uv run uvicorn src.service.main:app --host 127.0.0.1 --port 8000
 """
 

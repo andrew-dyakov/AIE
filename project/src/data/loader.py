@@ -8,7 +8,6 @@ def load_and_prepare_data():
     data_cfg = load_yaml("data.yaml")
     exp_cfg = load_yaml("experiment.yaml")
 
-    # Игнорируем относительный путь из конфига, берём только имя файла
     filename = Path(data_cfg["source_path"]).name
     data_path = DATA_DIR / filename
 
