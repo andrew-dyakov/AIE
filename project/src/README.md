@@ -24,6 +24,7 @@ src/
 │
 ├── service/               # FastAPI сервис
 │   ├── __init__.py
+│   ├── __main__.py
 │   ├── main.py            # Основное приложение FastAPI
 │   └── schemas.py         # Pydantic схемы для валидации
 │

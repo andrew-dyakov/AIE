@@ -36,13 +36,11 @@ def parse_args():
 def main():
     args = parse_args()
 
-    # Формируем команду для uvicorn
     reload_flag = "--reload" if args.reload else ""
     cmd = f"uvicorn src.service.main:app --host {args.host} --port {args.port} {reload_flag}"
 
     print(f"Запуск команды: {cmd}")
 
-    # Запускаем uvicorn как подпроцесс
     import subprocess
 
     result = subprocess.run(cmd.split(), cwd=PROJECT_ROOT)
